@@ -1,5 +1,5 @@
 <?php
-namespace Hamidin\SimpleCrypt;
+namespace Hamidin\SimpleCrypt\Console;
 
 use Illuminate\Console\Command;
 
