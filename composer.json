@@ -1,0 +1,26 @@
+{
+    "name": "hamidin/simple-crypt",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hamidin\\SimpleCrypt\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hamidin hidayat",
+            "email": "mailnidimah.hamidin@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hamidin\\SimpleCrypt\\SimpleCryptServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "laravel/framework": ">=7.0",
+        "php": ">=7.2.5"
+    }
+}
