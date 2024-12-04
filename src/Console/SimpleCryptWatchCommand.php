@@ -12,7 +12,8 @@ class SimpleCryptWatchCommand extends Command
      * @var string
     */
 
-    protected $signature = "simplecrypt:watch {filename}";
+    protected $signature = "simplecrypt:watch 
+        {filename : The filename to create sh files}";
 
     /**
      * The console command description.
@@ -81,6 +82,7 @@ class SimpleCryptWatchCommand extends Command
             done
         EOT;
 
-        $written = \Storage::put($this->argument('filename').'.sh', $fileContents);
+        $filename = $this->argument('filename').'.sh';
+        $written = \Storage::put($filename, $fileContents);
     }
 }

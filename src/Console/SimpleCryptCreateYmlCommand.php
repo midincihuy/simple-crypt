@@ -15,7 +15,12 @@ class SimpleCryptCreateYmlCommand extends Command
      * @var string
     */
 
-    protected $signature = "simplecrypt:create-yml {filename} {--dir=} {--extensions=} {--result_dir=} {--recipients=}";
+    protected $signature = "simplecrypt:create-yml 
+        {filename : The Filename} 
+        {--dir= : The directory to scan} 
+        {--extensions= : List of Extensions separated by semicolon} 
+        {--result_dir= : The Result Directory of Encrypted Files} 
+        {--recipients= : List of Recipients separated by semicolon}";
 
     /**
      * The console command description.
@@ -32,7 +37,7 @@ class SimpleCryptCreateYmlCommand extends Command
     public function handle()
     {
         // Get Data from Parameter
-        $filename = $this->argument('filename');
+        $filename = $this->argument('filename').".yaml";
         $array = [
             'setting' => 
             [
@@ -44,6 +49,6 @@ class SimpleCryptCreateYmlCommand extends Command
         ];
         
         $yaml = Yaml::dump($array,2,2);
-        Storage::put($filename.'.yaml', $yaml);
+        Storage::put($filename, $yaml);
     }
 }
