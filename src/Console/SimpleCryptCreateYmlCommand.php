@@ -2,6 +2,9 @@
 namespace Hamidin\SimpleCrypt\Console;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Yaml\Yaml;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class SimpleCryptCreateYmlCommand extends Command
 {
@@ -12,7 +15,7 @@ class SimpleCryptCreateYmlCommand extends Command
      * @var string
     */
 
-    protected $signature = "simplecrypt:create-yml";
+    protected $signature = "simplecrypt:create-yml {filename} {--dir=} {--extensions=} {--result_dir=} {--recipients=}";
 
     /**
      * The console command description.
@@ -28,6 +31,19 @@ class SimpleCryptCreateYmlCommand extends Command
      */
     public function handle()
     {
-        // do nothing
+        // Get Data from Parameter
+        $filename = $this->argument('filename');
+        $array = [
+            'setting' => 
+            [
+                'dir' => $this->option('dir'),
+                'extensions' => $this->option('extensions'),
+                'result_dir' => $this->option('result_dir'),
+                'recipients' => $this->option('recipients'),
+            ],
+        ];
+        
+        $yaml = Yaml::dump($array,2,2);
+        Storage::put($filename.'.yaml', $yaml);
     }
 }
