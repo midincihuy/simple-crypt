@@ -2,8 +2,10 @@
 
 namespace Hamidin\SimpleCrypt;
 
+use Composer\InstalledVersions;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-
+use Illuminate\Foundation\Console\AboutCommand;
+use Illuminate\Support\Collection;
 use Hamidin\SimpleCrypt\Console\SimpleCryptCreateYmlCommand;
 use Hamidin\SimpleCrypt\Console\SimpleCryptWatchCommand;
 
@@ -24,12 +26,10 @@ class SimpleCryptServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        // Bind a singleton instance of the SimpleCrypt class into the service
-        // container.
-
-        // $this->app->singleton(SimpleCrypt::class, function () {
-        //     return new SimpleCrypt(config('simplecrypt.filters', []));
-        // });
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/simplecrypt.php',
+            'simplecrypt'
+        );
     }
 
     
@@ -40,7 +40,9 @@ class SimpleCryptServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
+        $this->offerPublishing();
         $this->registerCommands();
+        $this->registerAbout();
     }
 
     
@@ -69,5 +71,45 @@ class SimpleCryptServiceProvider extends BaseServiceProvider
     private function packagePath($path)
     {
         return __DIR__."/../$path";
+    }
+
+    protected function registerAbout(): void
+    {
+        if (! class_exists(InstalledVersions::class) || ! class_exists(AboutCommand::class)) {
+            return;
+        }
+
+        // array format: 'Display Text' => 'boolean-config-key name'
+        $features = [
+            'Create-Yaml-File' => 'create_yaml',
+            'Create-Shell-File' => 'create_shell',
+        ];
+        $config = $this->app['config'];
+
+        AboutCommand::add('Simple Crypt', static fn () => [
+            'Features Enabled' => collect($features)
+                ->filter(fn (string $feature, string $name): bool => $config->get("simplecrypt.{$feature}"))
+                ->keys()
+                ->whenEmpty(fn (Collection $collection) => $collection->push('Default'))
+                ->join(', '),
+            'Version' => InstalledVersions::getPrettyVersion('hamidin/simple-crypt'),
+        ]);
+    }
+
+    protected function offerPublishing(): void
+    {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
+        if (! function_exists('config_path')) {
+            // function not available and 'publish' not relevant in Lumen
+            return;
+        }
+
+        $this->publishes([
+            __DIR__.'/../config/simplecrypt.php' => config_path('simplecrypt.php'),
+        ], 'simplecrypt-config');
+
     }
 }
