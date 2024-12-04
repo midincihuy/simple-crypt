@@ -12,7 +12,7 @@ class SimpleCryptWatchCommand extends Command
      * @var string
     */
 
-    protected $signature = "simplecrypt:watch";
+    protected $signature = "simplecrypt:watch {filename}";
 
     /**
      * The console command description.
@@ -28,6 +28,10 @@ class SimpleCryptWatchCommand extends Command
      */
     public function handle()
     {
-        // do nothing
+        $fileContents = <<< 'EOT'
+        #!/bin/sh;
+        EOT;
+
+        $written = \Storage::put($this->argument('filename').'.sh', $fileContents);
     }
 }
