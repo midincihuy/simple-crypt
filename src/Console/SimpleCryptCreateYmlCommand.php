@@ -16,7 +16,7 @@ class SimpleCryptCreateYmlCommand extends Command
     */
 
     protected $signature = "simplecrypt:create-yml 
-        {filename : The Filename} 
+        {filename : The Filename to create config yaml} 
         {--dir= : The directory to scan} 
         {--extensions= : List of Extensions separated by semicolon} 
         {--result_dir= : The Result Directory of Encrypted Files} 
@@ -50,5 +50,7 @@ class SimpleCryptCreateYmlCommand extends Command
         
         $yaml = Yaml::dump($array,2,2);
         Storage::put($filename, $yaml);
+        $this->info('file '.$filename.' has been created');
+
     }
 }

@@ -30,7 +30,7 @@ class SimpleCryptWatchCommand extends Command
     public function handle()
     {
         $fileContents = <<< 'EOT'
-        #!/bin/sh;
+        #!/bin/bash
         parse_yaml() {
             local prefix=$2
             local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
@@ -84,5 +84,7 @@ class SimpleCryptWatchCommand extends Command
 
         $filename = $this->argument('filename').'.sh';
         $written = \Storage::put($filename, $fileContents);
+
+        $this->info('file '.$filename.' has been created');
     }
 }
